@@ -1,0 +1,11 @@
+/home/bruno/Documentos/console/bin/Debug/netcoreapp2.2/console.deps.json
+/home/bruno/Documentos/console/bin/Debug/netcoreapp2.2/console.runtimeconfig.json
+/home/bruno/Documentos/console/bin/Debug/netcoreapp2.2/console.runtimeconfig.dev.json
+/home/bruno/Documentos/console/bin/Debug/netcoreapp2.2/console.dll
+/home/bruno/Documentos/console/bin/Debug/netcoreapp2.2/console.pdb
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.csprojAssemblyReference.cache
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.csproj.CoreCompileInputs.cache
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.AssemblyInfoInputs.cache
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.AssemblyInfo.cs
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.dll
+/home/bruno/Documentos/console/obj/Debug/netcoreapp2.2/console.pdb
