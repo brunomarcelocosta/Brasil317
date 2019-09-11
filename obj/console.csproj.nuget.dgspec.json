@@ -39,6 +39,14 @@
       "frameworks": {
         "netcoreapp2.2": {
           "dependencies": {
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
               "target": "Package",
@@ -48,10 +56,6 @@
             "Selenium.Chrome.WebDriver": {
               "target": "Package",
               "version": "[76.0.0, )"
-            },
-            "Selenium.Internal.SeleniumEmulation": {
-              "target": "Package",
-              "version": "(, )"
             },
             "Selenium.Support": {
               "target": "Package",
@@ -64,6 +68,10 @@
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
               "version": "[76.0.3809.12600, )"
+            },
+            "System.Windows.Forms": {
+              "target": "Package",
+              "version": "[4.0.0, )"
             }
           },
           "imports": [
