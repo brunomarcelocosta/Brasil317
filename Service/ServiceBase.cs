@@ -54,6 +54,7 @@ namespace Teste.Service
             {
                 var co = new ChromeOptions();
                 co.AddArgument("--incognito");
+                co.AddArgument("--no-sandbox");
 
                 using (var driver = new ChromeDriver(driverService, co, TimeSpan.FromSeconds(60)))
                 {
@@ -236,7 +237,7 @@ namespace Teste.Service
 
         public void CreateFile(string value, string name, string directory)
         {
-            string file = $"{directory}/{name}.txt";
+            string file = $"{directory}/{name}.html";
 
             using (StreamWriter sw = File.CreateText(file))
             {
