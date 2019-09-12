@@ -14,19 +14,12 @@ namespace Teste.Service
     public class ServiceBase
     {
         public IWebDriver driver;
-        public string path;
-        public string url;
+        public static int threads = 0;
 
-        public void StartMethod()
+        public void StartMethod(string value)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true);
-            var config = builder.Build();
 
-
-            var threads = int.Parse($"{config["threads"]}");
-            path = $"{config["path"]}";
-
-            DeleteFiles(path);
+            threads = int.Parse(value);
 
             var processNumber = 0;
             Thread[] array = new Thread[threads];
@@ -46,22 +39,14 @@ namespace Teste.Service
 
         }
 
-        public void DeleteFiles(string directory)
-        {
-            var files = Directory.GetFiles(directory);
-            foreach (string file in files)
-            {
-                File.Delete(file);
-            }
-        }
+
         public void OpenWebDriver(object processNumber)
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true);
             var config = builder.Build();
 
-            path = $"{config["path"]}";
-            url = $"{config["urlChrome"]}";
-            var threads = int.Parse($"{config["threads"]}");
+            var file = $"{config["path"]}";
+            var url = $"{config["urlChrome"]}";
 
             int intNumber = int.Parse(processNumber.ToString());
 
@@ -74,7 +59,7 @@ namespace Teste.Service
                 {
                     try
                     {
-                        Navagation(driver, path, url, intNumber, threads);
+                        Navagation(driver, file, url, intNumber, threads);
                     }
                     catch (Exception e)
                     {
@@ -89,7 +74,7 @@ namespace Teste.Service
 
         }
 
-        private void Navagation(IWebDriver driver, string path, string url, int processNumber, int threads)
+        private void Navagation(IWebDriver driver, string file, string url, int processNumber, int threads)
         {
             try
             {
@@ -107,7 +92,7 @@ namespace Teste.Service
                     return;
                 }
 
-                ExecuteContinue(delegate { SelectItem(driver, processNumber, threads); }, out bool isItem);
+                ExecuteContinue(delegate { SelectItem(driver, processNumber, threads, file); }, out bool isItem);
                 if (!isItem)
                 {
                     Console.WriteLine("Timeout");
@@ -126,6 +111,7 @@ namespace Teste.Service
             try
             {
                 driver.Navigate().GoToUrl(url);
+                driver.Navigate().Refresh();
             }
             catch (Exception e)
             {
@@ -199,7 +185,7 @@ namespace Teste.Service
             }
         }
 
-        private void SelectItem(IWebDriver driver, int processNumber, int threads)
+        private void SelectItem(IWebDriver driver, int processNumber, int threads, string file)
         {
             try
             {
@@ -235,7 +221,7 @@ namespace Teste.Service
 
                         var html = driver.PageSource;
 
-                        CreateFile(html, name, path);
+                        CreateFile(html, name, file);
 
                         driver.FindElement(By.Id("btnVoltar")).Click();
 
@@ -250,9 +236,9 @@ namespace Teste.Service
 
         public void CreateFile(string value, string name, string directory)
         {
-            string path = $"{directory}/{name}.txt";
+            string file = $"{directory}/{name}.txt";
 
-            using (StreamWriter sw = File.CreateText(path))
+            using (StreamWriter sw = File.CreateText(file))
             {
                 sw.WriteLine(value);
             }
