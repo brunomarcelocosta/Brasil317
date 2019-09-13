@@ -19,6 +19,8 @@ namespace Teste.Service
         public void StartMethod(string value)
         {
 
+            Console.WriteLine("Start Metodo...");
+
             threads = int.Parse(value);
 
             var processNumber = 0;
@@ -37,49 +39,63 @@ namespace Teste.Service
 
             });
 
+            var path = @"./home/HTMLs";
+
+            var files = Directory.GetFiles(path);
+            foreach (string file in files)
+            {
+                Console.WriteLine($"file:{file}");
+            }
+
         }
 
 
         public void OpenWebDriver(object processNumber)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true);
-            var config = builder.Build();
-
-            var file = $"{config["path"]}";
-            var url = $"{config["urlChrome"]}";
-
             int intNumber = int.Parse(processNumber.ToString());
 
-            using (ChromeDriverService driverService = ChromeDriverService.CreateDefaultService("/home/bruno/Área de Trabalho/Teste/Driver"))
+            try
             {
+                // ChromeDriverService driverService = ChromeDriverService.CreateDefaultService("/opt/selenium");
+
+                Console.WriteLine("Pegou webdriver...");
+
                 var co = new ChromeOptions();
                 co.AddArgument("--incognito");
                 co.AddArgument("--no-sandbox");
+                co.AddArgument("--headless");
 
-                using (var driver = new ChromeDriver(driverService, co, TimeSpan.FromSeconds(60)))
+                var driver = new ChromeDriver("/opt/selenium", co);
+
+                Console.WriteLine("Open webdriver...");
+
+                try
                 {
-                    try
-                    {
-                        Navagation(driver, file, url, intNumber, threads);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-                    finally
-                    {
-                        driver.Quit();
-                    }
+                    Navagation(driver, intNumber, threads);
                 }
+                catch
+                {
+
+                }
+                finally
+                {
+                    driver.Quit();
+                    driver.Dispose();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
             }
 
         }
 
-        private void Navagation(IWebDriver driver, string file, string url, int processNumber, int threads)
+        private void Navagation(IWebDriver driver, int processNumber, int threads)
         {
             try
             {
-                ExecuteContinue(delegate { GoToHomePage(driver, url); }, out bool isPage);
+                ExecuteContinue(delegate { GoToHomePage(driver); }, out bool isPage);
                 if (!isPage)
                 {
                     Console.WriteLine("Timeout");
@@ -93,7 +109,7 @@ namespace Teste.Service
                     return;
                 }
 
-                ExecuteContinue(delegate { SelectItem(driver, processNumber, threads, file); }, out bool isItem);
+                ExecuteContinue(delegate { SelectItem(driver, processNumber, threads); }, out bool isItem);
                 if (!isItem)
                 {
                     Console.WriteLine("Timeout");
@@ -107,16 +123,21 @@ namespace Teste.Service
 
         }
 
-        private void GoToHomePage(IWebDriver driver, string url)
+        private void GoToHomePage(IWebDriver driver)
         {
             try
             {
-                driver.Navigate().GoToUrl(url);
+                Console.WriteLine("GOING TO HOMEPAGE...");
+
+                driver.Navigate().GoToUrl("http://comprasnet.gov.br/acesso.asp?url=/livre/pregao/ata0.asp");
+
+                Console.WriteLine("AT HOMEPAGE...");
+
                 driver.Navigate().Refresh();
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(" - Message: " + e.Message);
+
             }
 
         }
@@ -180,13 +201,13 @@ namespace Teste.Service
                 Thread.Sleep(1000);
 
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(" # Message: " + e.Message);
+
             }
         }
 
-        private void SelectItem(IWebDriver driver, int processNumber, int threads, string file)
+        private void SelectItem(IWebDriver driver, int processNumber, int threads)
         {
             try
             {
@@ -222,22 +243,26 @@ namespace Teste.Service
 
                         var html = driver.PageSource;
 
-                        CreateFile(html, name, file);
+                        CreateFile(html, name);
 
                         driver.FindElement(By.Id("btnVoltar")).Click();
 
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+
             }
         }
 
-        public void CreateFile(string value, string name, string directory)
+        public void CreateFile(string value, string name)
         {
+            var directory = @"./home/HTMLs";
+
             string file = $"{directory}/{name}.html";
+
+            Console.WriteLine("Recorded the file...");
 
             using (StreamWriter sw = File.CreateText(file))
             {

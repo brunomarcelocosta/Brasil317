@@ -17,18 +17,23 @@ namespace console
 
             }
 
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true);
-            var config = builder.Build();
+            Console.WriteLine("Iniciou...");
 
-            var path = $"{config["path"]}";
 
-            DeleteFiles(path);
+            // var path = $"{config["path"]}";
+
+            DeleteFiles();
 
             new Teste.Service.ServiceBase().StartMethod(value);
         }
 
-        public static void DeleteFiles(string path)
+        public static void DeleteFiles()
         {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true);
+            var config = builder.Build();
+
+            var path = @"./home/HTMLs";
+
             var files = Directory.GetFiles(path);
             foreach (string file in files)
             {
